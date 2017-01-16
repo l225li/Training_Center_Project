@@ -1,41 +1,34 @@
 <?php 
 $cookie_name = "loggedin";
+require_once 'utils.php';
 
-$user = 'root';
-$pass = 'root';
-$db = 'training_center';
-$host = 'localhost';
-$port = 3306;
-
-$link = mysqli_init();
-$success = mysqli_real_connect(
-   $link, 
-   $host, 
-   $user, 
-   $pass, 
-   $db,
-   $port
-);
-// check if database is connected
-if(!$link){
-	die("Database connection failed: ".mysql_connect_error());
-}
+$link = connectDB();
 
 if(isset($_POST['login'])){
 
-	$login_email = $_POST['login_email'];
+	$userid = $_POST['userid'];
 	$password = $_POST['password'];
 	//$phash = sha1(sha1($pass."salt")."salt");
 
-	$sql = "SELECT * FROM person WHERE email='$login_email' AND password='$password';";
+	$sql = "SELECT * FROM person WHERE person_id='$userid' AND password='$password';";
 	$result = mysqli_query($link, $sql);
 	$count = mysqli_num_rows($result);
+	$is_trainer = mysqli_fetch_assoc($result)["is_trainer"];
+
+	// for ($i=0;$i<$count;$i++){
+	// 	$result_arr = mysqli_fetch_assoc($result);
+	// 	print_r ($result_arr["is_trainer"]);
+	// }
 
 	if($count == 1){
 
-		$cookie_value = $login_email;
-		setcookie($cookie_name, $cookie_value, time()+(180), "/");
-		header("Location: personal.php");		
+		$cookie_value = $userid;
+		setcookie($cookie_name, $cookie_value, time()+(86400 * 30), "/");
+		if($is_trainer == 1){
+		header("Location: trainer_home.php");}
+		else{
+			header("Location: student_home.php");
+		}		
 	}
 	else
 	{
@@ -44,11 +37,11 @@ if(isset($_POST['login'])){
 }
 else if(isset($_POST['register'])){
 
-	$login_email = $_POST['login_email'];
+	$userid = $_POST['userid'];
 	$password = $_POST['password'];
 	//$phash = sha1(sha1($pass."salt")."salt");
 
-	$sql = "INSERT INTO person(email, password) VALUES email='$login_email' AND password='$password';";
+	$sql = "INSERT INTO person(person_id, password) VALUES person_id='$userid' AND password='$password';";
 	$result = mysqli_query($link, $sql);
 
 }

@@ -4,7 +4,7 @@
 </head>
 <body>
 	<form action="logreg.php" method="post" accept-charset="utf-8">
-	<label>Login: </label><input type="email" name="login_email" value="" placeholder="Login Email">
+	<label>Login: </label><input type="text" name="userid" value="" placeholder="User ID">
 	<br/><br/>
 	<label>Password: </label><input type="password" name="password" value="" placeholder="Password">
 	<br/> <br/>
@@ -13,29 +13,3 @@
 </body>
 </html>
 
-
-<?php 
-$user = 'root';
-$password = 'root';
-$db = 'training_center';
-$host = 'localhost';
-$port = 3306;
-
-$link = mysqli_init();
-$success = mysqli_real_connect(
-   $link, 
-   $host, 
-   $user, 
-   $password, 
-   $db,
-   $port
-);
-//check if database is connected
-// if($link){
-// 	echo 'connected';
-// }else{
-// 	echo 'failure';
-// }
-
-
- ?>
