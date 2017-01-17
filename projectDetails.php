@@ -4,7 +4,6 @@
 	<title></title>
 </head>
 <body>
-
 	<h2>Project Details</h2>
 	<table style='text-align: center;' border='1'>
 		<tr><th>Project ID</th><th>Title</th><th>Creation Date</th><th>Deadline</th><th>Subject</th></tr>

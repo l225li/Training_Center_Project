@@ -1,6 +1,6 @@
 <?php
 require_once 'config.php';
-
+// function to connect to DB, would be used repetitively
 function connectDB(){
 	$link = mysqli_init();
 	$success = mysqli_real_connect(
@@ -10,6 +10,6 @@ function connectDB(){
 	} else{
 		return $link;
 	}
-
 }
+
 ?>

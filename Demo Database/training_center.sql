@@ -210,6 +210,27 @@ BEGIN
 END$$
 
 -- -----------------------------------------------------
+-- Trigger project_before_update_trigger:
+-- Raise user exception when deadline is sooner than
+-- creation date, or when title is empty
+-- -----------------------------------------------------
+
+DROP TRIGGER IF EXISTS project_before_update_trigger$$
+CREATE TRIGGER project_before_update_trigger BEFORE UPDATE ON project
+FOR EACH ROW
+BEGIN
+  IF NEW.deadline < NEW.created_at THEN
+    SIGNAL SQLSTATE '45000'
+    SET MESSAGE_TEXT='Deadline is sonner than creation date', MYSQL_ERRNO=3000;
+  END IF;
+  SET NEW.title = trim(initcap(NEW.title));
+  IF NEW.title REGEXP '^ *$' THEN
+    SIGNAL SQLSTATE '45000'
+    SET MESSAGE_TEXT = 'Title is empty', MYSQL_ERRNO=3000;
+  END IF;
+END$$
+
+-- -----------------------------------------------------
 -- Trigger team_before_insert_trigger:
 -- set the creation date at current datatime
 -- -----------------------------------------------------
@@ -242,11 +263,46 @@ BEGIN
 END$$
 
 -- -----------------------------------------------------
+-- Trigger person_before_update_trigger:
+-- Raise user exception when first name or last name is 
+-- empty
+-- -----------------------------------------------------
+DROP TRIGGER IF EXISTS person_before_update_trigger$$
+CREATE TRIGGER person_before_update_trigger BEFORE UPDATE ON person
+FOR EACH ROW
+BEGIN
+  SET NEW.first_name = trim(initcap(NEW.first_name));
+  SET NEW.last_name = trim(initcap(NEW.last_name));
+  SET NEW.address = trim(initcap(NEW.address));
+  SET NEW.town = trim(initcap(NEW.town));
+  IF NEW.first_name REGEXP '^ *$' OR New.last_name REGEXP '^ *$' THEN
+    SIGNAL SQLSTATE '45000'
+    SET MESSAGE_TEXT = 'First Name or Last Name is empty', MYSQL_ERRNO=3000;
+  END IF;
+  SET NEW.created_at = CURRENT_TIMESTAMP;
+END$$
+
+-- -----------------------------------------------------
 -- Trigger class_before_insert_trigger:
 -- Raise user exception when class name is empty
 -- -----------------------------------------------------
 DROP TRIGGER IF EXISTS class_before_insert_trigger$$
 CREATE TRIGGER class_before_insert_trigger BEFORE INSERT ON class
+FOR EACH ROW
+BEGIN
+  SET NEW.name = trim(initcap(NEW.name));
+  IF NEW.name REGEXP '^ *$' THEN
+    SIGNAL SQLSTATE '45000'
+    SET MESSAGE_TEXT = 'Class name is empty', MYSQL_ERRNO=3000;
+  END IF;
+END$$
+
+-- -----------------------------------------------------
+-- Trigger class_before_update_trigger:
+-- Raise user exception when class name is empty
+-- -----------------------------------------------------
+DROP TRIGGER IF EXISTS class_before_update_trigger$$
+CREATE TRIGGER class_before_insert_trigger BEFORE UPDATE ON class
 FOR EACH ROW
 BEGIN
   SET NEW.name = trim(initcap(NEW.name));
@@ -266,8 +322,6 @@ FOR EACH ROW
 BEGIN
   SET NEW.updated_at = CURRENT_TIMESTAMP;
 END$$
-
-
 
 
 -- -----------------------------------------------------
@@ -315,7 +369,6 @@ BEGIN
     INSERT INTO class_member(`person_id`,`class_id`)
     VALUES
     (1, 1),(1, 2),(1, 4),(1, 5),
-    (2, 1),(2, 2),(2, 3),(2, 4),
     (3, 1),(3, 3),(3, 4),(3, 5),
     (4, 1),(4, 2),(4, 3),(4, 4),(4, 5);
  

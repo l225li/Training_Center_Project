@@ -3,8 +3,6 @@ $cookie_name = "loggedin";
 if (isset($_COOKIE[$cookie_name]))
 {
 	?>
-
-
 	<!DOCTYPE html>
 	<html>
 	<head>

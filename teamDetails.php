@@ -5,7 +5,7 @@ if (isset($_COOKIE[$cookie_name]))
 <!DOCTYPE html>
 <html>
 <head>
-	<title></title>
+	<title>Team Details</title>
 </head>
 <body>
 	<h2>Team Detail</h2>
@@ -30,10 +30,12 @@ if (isset($_COOKIE[$cookie_name]))
 		require_once 'utils.php';
 		$link = connectDB();
 		$team_id = intval($_GET['team_id']);
+		// select all the teams related to this project 
 		$result = mysqli_query($link, "SELECT team.team_id, project.project_id, project.title, team.owner_id,person.first_name, person.last_name, class.name, team.created_at, team.summary FROM team JOIN project JOIN person JOIN class ON team.project_id = project.project_id and team.owner_id = person.person_id and project.class_id = class.class_id WHERE team_id = $team_id");
-		if (!$result){
-			echo mysqli_error($link);
-			die("Database connection error!");
+		if(!$result)
+		{
+		echo mysqli_error($link);
+		die();
 		}
 		$result_arr = mysqli_fetch_assoc($result);
 		$team_id = $result_arr['team_id'];
@@ -45,6 +47,7 @@ if (isset($_COOKIE[$cookie_name]))
 		$class_name = $result_arr['name'];
 		$created_at = $result_arr['created_at'];
 		$summary = $result_arr['summary'];
+		// List the details of the team
 		?>
 		<tr>
 			<td><?php echo $team_id ?></td>
@@ -72,16 +75,15 @@ if (isset($_COOKIE[$cookie_name]))
 			<th></th>
 		</tr>
 		<?php
-
+		// List the team member with their first name and last name
 		$sql = "SELECT person.person_id, person.first_name, person.last_name FROM team_member JOIN person ON team_member.student_id=person.person_id WHERE team_member.team_id = $team_id";
 		$result = mysqli_query($link, $sql);
-
-		if (!$result){
-			echo mysqli_error($link);
-			die("Database connection error!");
+		if(!$result)
+		{
+		echo mysqli_error($link);
+		die();
 		}
 		$count = mysqli_num_rows($result);
-
 		for($i=0;$i<$count;$i++){
 			$result_arr = mysqli_fetch_assoc($result);
 			$person_id = $result_arr['person_id'];
@@ -103,16 +105,19 @@ if (isset($_COOKIE[$cookie_name]))
 	</table>
 	<?php
 	if($cookie_value == $owner_id){ ?>
-	<a href='availableClassMembers.php?team_id=<?php echo $team_id ?>'>Add Member</a> <a href="editSummary.php?team_id=<?php echo $team_id ?>">Edit Summary</a>
+	<a href='availableClassMembers.php?team_id=<?php echo $team_id ?>'>Add Member</a>
+	<a href="editSummary.php?team_id=<?php echo $team_id ?>">Edit Summary</a>
 	<a href='projectDetails.php?project_id=<?php echo $project_id ?>'>Back to Project</a>
 	<?php 
-} ?>
+	}?>
 </div>
 <?php
-if($cookie_value == $owner_id){ ?>
+// Identify if user is owner of the team 
+if($cookie_value == $owner_id){?>
 <h3>You are the owner of this team</h3>
 </body>
 </html>
 <?php
 }
-} ?>
+}
+?>

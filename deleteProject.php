@@ -1,4 +1,5 @@
 <?php 
+// to delete a project, only owner of the project can delete
 $cookie_name = "loggedin";
 if (isset($_COOKIE[$cookie_name]))
 {

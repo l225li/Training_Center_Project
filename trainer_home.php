@@ -3,6 +3,7 @@
 $cookie_name = "loggedin";
 require_once 'utils.php';
 
+// Home page for trainers / admins to manage the projects 
 if (isset($_COOKIE[$cookie_name]))
 {
 
@@ -25,7 +26,7 @@ if (isset($_COOKIE[$cookie_name]))
 	<!DOCTYPE html>
 	<html>
 	<head>
-		<title></title>
+		<title>Trainer Home</title>
 	</head>
 	<body>
 		<h1> Welcome to home page for trainers, <?php echo $first_name?>!</h1>
@@ -33,7 +34,7 @@ if (isset($_COOKIE[$cookie_name]))
 			<a href="addProject.html">New Project</a> <a href="logout.php">logout</a></div>
 
 			<table style='text-align: center;' border='1'>
-				<h2>Current Porjects</h2>
+				<h2>Current Projects</h2>
 				<tr><th>Project ID</th>
 					<th>Title</th>
 					<th>Creation Date</th>
