@@ -166,84 +166,6 @@ CREATE TABLE IF NOT EXISTS `training_center`.`class_member` (
 ENGINE = InnoDB$$
 
 -- -----------------------------------------------------
--- Procedure training_center_reset:
--- This procedure is to reset some demo data inside 
--- the training_center schema
--- -----------------------------------------------------
-
-DROP PROCEDURE IF EXISTS training_center_reset$$
-CREATE PROCEDURE training_center_reset()
-BEGIN
-  SET FOREIGN_KEY_CHECKS = 0;
-  TRUNCATE TABLE person;
-  TRUNCATE TABLE class;
-  TRUNCATE TABLE project;
-  TRUNCATE TABLE team;
-  TRUNCATE TABLE class_member;
-  TRUNCATE TABLE document;
-  TRUNCATE Table team_member;
-
-  SET FOREIGN_KEY_CHECKS = 1;
-  BEGIN
-    DECLARE EXIT HANDLER FOR SQLEXCEPTION
-    BEGIN
-      ROLLBACK;
-      SELECT 'Insertion cancelled. The database is empty currently';
-    END;
-    START TRANSACTION;
-
-    INSERT INTO person(`person_id`,`first_name`,`last_name`,`address`,`zip_code`,`town`,`email`,`mobile_phone`,`phone`,`is_trainer`,`is_admin`,`password`,`picture_location`,`created_at`,`confirmed_at`,`confirmation_token`,`renew_password_token`)
-    VALUES
-    (1,'peter','li','123 NY Street','75015','paris','hello@hotmail.com','07 73 13 83 13', NULL, 1, 1, '1234', NULL, NULL, NULL, NULL, NULL),
-    (2,'sebastian','g','address', '75000','paris','seb@gmail.com','07 23 42 12 34', NULL, 1, 1, '1234', NULL, NULL, NULL, NULL, NULL),
-    (3,'nicole','andrea','address','75000','paris','nicole@gmail.com','07 23 42 24 13', NULL, 0, 0, '1234', NUll, NULL, NULL, NULL, NULL),
-    (4,'adrien','ali','address','75000','paris','adrien@gmail.com','01 32 34 13 64', NULL, 0, 0, '1234',NULL, NULL, NULL, NULL, NULL);
-
-
-    INSERT INTO class(`class_id`,`name`)
-    VALUES
-    (1, 'advanced database'),
-    (2, 'web development'),
-    (3, 'java'),
-    (4, 'advanced algorithm'),
-    (5, 'advanced c');
-    INSERT INTO class_member(`person_id`,`class_id`)
-    VALUES
-    (1, 1),(1, 2),(1, 3),(1, 4),(1, 5),
-    (2, 1),(2, 2),(2, 3),(2, 4),(2, 5),
-    (3, 1),(3, 2),(3, 3),(3, 4),(3, 5),
-    (4, 1),(4, 2),(4, 3),(4, 4),(4, 5);
- 
-    INSERT INTO project(`project_id`,`owner_id`,`class_id`,`title`,`created_at`,`deadline`,`subject`)
-    VALUES
-    (1, 1, 2, 'training_center', NULL, '2017-03-01','this is a placeholder for subject'),
-    (2, 2, 3, 'java web', NULL, '2017-03-01', 'this is a placeholder for subject');
-
-    INSERT INTO team(`team_id`,`project_id`,`owner_id`,`created_at`,`summary`)
-    VALUES
-    (1, 1, 1, NULL, 'This is placeholder for summary'),
-    (2, 1, 3, NULL, 'This is placeholder for summary'),
-    (3, 2, 2, NULL, 'placeholder for summary'),
-    (4, 2, 4, NULL, 'placeholder for summary');
-
-    INSERT INTO team_member(`team_id`,`student_id`)
-    VALUES
-    (1, 1),(1, 2),(2, 3),(2, 4),(3, 2),(3, 1),(4, 3),(4, 4);
-
-    INSERT INTO document(`document_id`,`author_id`,`team_id`,`location`,`created_at`,`updated_at`)
-    VALUES
-    (1,1,1,'location', CURRENT_TIMESTAMP, NULL),
-    (2,1,3,'location', CURRENT_TIMESTAMP, NULL),
-    (3,2,1,'location', CURRENT_TIMESTAMP, NULL),
-    (4,3,2,'location', CURRENT_TIMESTAMP, NULL),
-    (5,4,4,'location', CURRENT_TIMESTAMP, NULL);
-    COMMIT;
-  END;
-END$$
-
-CALL training_center_reset()$$
-
--- -----------------------------------------------------
 -- Function inicap():
 -- This function is to capitalize the first letter of
 -- each word in the input text
@@ -346,6 +268,87 @@ BEGIN
 END$$
 
 
+
+
+-- -----------------------------------------------------
+-- Procedure training_center_reset:
+-- This procedure is to reset some demo data inside 
+-- the training_center schema
+-- -----------------------------------------------------
+
+DROP PROCEDURE IF EXISTS training_center_reset$$
+CREATE PROCEDURE training_center_reset()
+BEGIN
+  SET FOREIGN_KEY_CHECKS = 0;
+  TRUNCATE TABLE person;
+  TRUNCATE TABLE class;
+  TRUNCATE TABLE project;
+  TRUNCATE TABLE team;
+  TRUNCATE TABLE class_member;
+  TRUNCATE TABLE document;
+  TRUNCATE Table team_member;
+
+  SET FOREIGN_KEY_CHECKS = 1;
+  BEGIN
+    DECLARE EXIT HANDLER FOR SQLEXCEPTION
+    BEGIN
+      ROLLBACK;
+      SELECT 'Insertion cancelled. The database is empty currently';
+    END;
+    START TRANSACTION;
+
+    INSERT INTO person(`person_id`,`first_name`,`last_name`,`address`,`zip_code`,`town`,`email`,`mobile_phone`,`phone`,`is_trainer`,`is_admin`,`password`,`picture_location`,`created_at`,`confirmed_at`,`confirmation_token`,`renew_password_token`)
+    VALUES
+    (1,'peter','li','123 NY Street','75015','paris','hello@hotmail.com','0773138313', NULL, 1, 0, '1234', NULL, NULL, NULL, NULL, NULL),
+    (2,'sebastian','g','address', '75000','paris','seb@gmail.com','0723421234', NULL, 0, 1, '1234', NULL, NULL, NULL, NULL, NULL),
+    (3,'nicole','andrea','address','75000','paris','nicole@gmail.com','0723422413', NULL, 0, 0, '1234', NUll, NULL, NULL, NULL, NULL),
+    (4,'adrien','ali','address','75000','paris','adrien@gmail.com','0132341364', NULL, 0, 0, '1234',NULL, NULL, NULL, NULL, NULL);
+
+
+    INSERT INTO class(`class_id`,`name`)
+    VALUES
+    (1, 'advanced database'),
+    (2, 'web development'),
+    (3, 'java'),
+    (4, 'advanced algorithm'),
+    (5, 'advanced c');
+    INSERT INTO class_member(`person_id`,`class_id`)
+    VALUES
+    (1, 1),(1, 2),(1, 4),(1, 5),
+    (2, 1),(2, 2),(2, 3),(2, 4),
+    (3, 1),(3, 3),(3, 4),(3, 5),
+    (4, 1),(4, 2),(4, 3),(4, 4),(4, 5);
+ 
+    INSERT INTO project(`project_id`,`owner_id`,`class_id`,`title`,`created_at`,`deadline`,`subject`)
+    VALUES
+    (1, 1, 2, 'training_center', NULL, '2017-03-01','this is a placeholder for subject'),
+    (2, 1, 3, 'java web', NULL, '2017-03-01', 'this is a placeholder for subject');
+
+    INSERT INTO team(`team_id`,`project_id`,`owner_id`,`created_at`,`summary`)
+    VALUES
+    (1, 1, 1, NULL, 'This is placeholder for summary'),
+    (2, 1, 4, NULL, 'This is placeholder for summary'),
+    (3, 2, 2, NULL, 'placeholder for summary'),
+    (4, 2, 4, NULL, 'placeholder for summary');
+
+    INSERT INTO team_member(`team_id`,`student_id`)
+    VALUES
+    (1, 1),(1, 2),(2, 4),(3, 2),(4, 3),(4, 4);
+
+    INSERT INTO document(`document_id`,`author_id`,`team_id`,`location`,`created_at`,`updated_at`)
+    VALUES
+    (1,1,1,'location', CURRENT_TIMESTAMP, NULL),
+    (2,2,3,'location', CURRENT_TIMESTAMP, NULL),
+    (3,2,1,'location', CURRENT_TIMESTAMP, NULL),
+    (4,4,2,'location', CURRENT_TIMESTAMP, NULL),
+    (5,4,4,'location', CURRENT_TIMESTAMP, NULL);
+    COMMIT;
+  END;
+END$$
+
+CALL training_center_reset()$$
+
+
 /* Create a user to be used in PHP for the connection,
  * and give him all grants on the DB.
  */
@@ -361,8 +364,6 @@ CREATE USER demo_user@localhost IDENTIFIED by 'demo_password' $$
 GRANT ALL ON demo.* TO demo_user@localhost $$
 -- and on the stored procedure
 GRANT SELECT ON mysql.proc TO demo_user@localhost $$
-
-
 
 
 

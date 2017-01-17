@@ -25,25 +25,25 @@ if(isset($_POST['login'])){
 		$cookie_value = $userid;
 		setcookie($cookie_name, $cookie_value, time()+(86400 * 30), "/");
 		if($is_trainer == 1){
-		header("Location: trainer_home.php");}
-		else{
-			header("Location: student_home.php");
-		}		
+			header("Location: trainer_home.php");}
+			else{
+				header("Location: student_home.php");
+			}		
+		}
+		else
+		{
+			echo "Username or password is incorrect!";
+		}
 	}
-	else
-	{
-		echo "Username or password is incorrect!";
-	}
-}
-else if(isset($_POST['register'])){
+	else if(isset($_POST['register'])){
 
-	$userid = $_POST['userid'];
-	$password = $_POST['password'];
+		$userid = $_POST['userid'];
+		$password = $_POST['password'];
 	//$phash = sha1(sha1($pass."salt")."salt");
 
-	$sql = "INSERT INTO person(person_id, password) VALUES person_id='$userid' AND password='$password';";
-	$result = mysqli_query($link, $sql);
+		$sql = "INSERT INTO person(person_id, password) VALUES person_id='$userid' AND password='$password';";
+		$result = mysqli_query($link, $sql);
 
-}
-?>
+	}
+	?>
 
